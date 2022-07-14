@@ -21,6 +21,7 @@ apps:
     extensions: [gnome-3-38]
     plugs:
       - home
+      - network
     desktop: usr/share/applications/org.gnome.Weather.desktop
     common-id: org.gnome.Weather
     environment:
