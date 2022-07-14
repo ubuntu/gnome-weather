@@ -1,0 +1,93 @@
+name: gnome-weather
+adopt-info: gnome-weather
+grade: stable
+confinement: strict
+base: core20
+
+layout:
+  /usr/bin/gjs:
+    symlink: $SNAP/gnome-platform/usr/bin/gjs
+
+slots:
+  # for GtkApplication registration
+  gnome-weather:
+    interface: dbus
+    bus: session
+    name: org.gnome.Weather
+
+apps:
+  gnome-weather:
+    command: usr/share/org.gnome.Weather/org.gnome.Weather
+    extensions: [gnome-3-38]
+    plugs:
+      - home
+    desktop: usr/share/applications/org.gnome.Weather.desktop
+    common-id: org.gnome.Weather
+    environment:
+      LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/org.gnome.Weather:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/lib:$SNAP/gnome-platform/usr/lib:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      GI_TYPELIB_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/org.gnome.Weather/girepository-1.0:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gjs/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
+      LIBGWEATHER_LOCATIONS_PATH: $SNAP/usr/share/libgweather/Locations.xml
+
+parts:
+  gnome-weather:
+    after: [libgweather, geoclue]
+    source: https://gitlab.gnome.org/GNOME/gnome-weather.git
+    source-type: git
+    source-branch: gnome-3-36
+    plugin: meson
+    meson-version: 0.58.1
+    meson-parameters: [--buildtype=release, --prefix=/snap/gnome-weather/current/usr]
+    build-packages: [meson, ninja-build]
+    parse-info: [usr/share/metainfo/org.gnome.Weather.appdata.xml]
+    organize:
+      snap/gnome-weather/current/usr: usr
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version $(git describe --tags --abbrev=10)
+      sed -i -e 's|@GJS@|/usr/bin/gjs|g' src/org.gnome.Weather.in
+      sed -i -e 's|@GJS@|/usr/bin/gjs|g' src/org.gnome.Weather.BackgroundService.in
+    prime:
+      - -usr/share/gnome-shell/search-providers
+  geoclue:
+    source: https://gitlab.freedesktop.org/geoclue/geoclue.git
+    source-type: git
+    source-branch: 2.6.x
+    plugin: meson
+    meson-parameters: [--prefix=/usr, -Dgtk-doc=false, -D3g-source=false, -Dcdma-source=false, -Dmodem-gps-source=false, -Dnmea-source=false, -Ddemo-agent=false]
+    prime:
+      - -etc/dbus-1
+      - -etc/geoclue
+      - -etc/xdg/autostart
+      - -lib/systemd/service
+      - -usr/include
+      - -usr/lib/pkgconfig
+      - -usr/lib/*/pkgconfig
+      - -usr/share/dbus-1/interfaces      
+      - -usr/share/dbus-1/system-services
+      - -usr/share/man
+      - -usr/share/pkgconfig
+  libgweather:
+    after: [geocode-glib]
+    source: https://gitlab.gnome.org/GNOME/libgweather.git
+    source-type: git
+    source-branch: gnome-3-36
+    plugin: meson
+    meson-parameters: [--prefix=/usr, -Dgtk_doc=false]
+    prime:
+      - -usr/include
+      - -usr/lib/pkgconfig
+      - -usr/lib/*/pkgconfig
+      - -usr/share/pkgconfig
+  geocode-glib:
+    source: https://gitlab.gnome.org/GNOME/geocode-glib.git
+    source-type: git
+    source-tag: 3.26.3
+    plugin: meson
+    meson-parameters: [--prefix=/usr, -Denable-gtk-doc=false, -Denable-installed-tests=false]
+    prime:
+      - -etc/geoclue
+      - -usr/include
+      - -usr/libexec/geoclue-2.0/demos
+      - -usr/lib/pkgconfig
+      - -usr/lib/*/pkgconfig
+      - -usr/share/pkgconfig
