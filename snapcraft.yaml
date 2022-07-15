@@ -20,7 +20,6 @@ apps:
     command: usr/share/org.gnome.Weather/org.gnome.Weather
     extensions: [gnome-3-38]
     plugs:
-      - home
       - network
       - desktop
       - network-status
