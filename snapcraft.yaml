@@ -47,6 +47,11 @@ parts:
       snapcraftctl set-version $(git describe --tags --abbrev=10)
       sed -i -e 's|@GJS@|/usr/bin/gjs|g' src/org.gnome.Weather.in
       sed -i -e 's|@GJS@|/usr/bin/gjs|g' src/org.gnome.Weather.BackgroundService.in
+      sed -i.bak -e 's|Icon=@APP_ID@$|Icon=snap.gnome-weather.icon|g' data/org.gnome.Weather.desktop.in.in
+    override-build: |
+      snapcraftctl build
+      mkdir -p ${SNAPCRAFT_PART_INSTALL}/meta/gui/icons/hicolor/scalable/apps
+      cp ../src/data/icons/hicolor/scalable/apps/org.gnome.Weather.svg ${SNAPCRAFT_PART_INSTALL}/meta/gui/icons/hicolor/scalable/apps/snap.gnome-weather.icon.svg
     prime:
       - -usr/share/gnome-shell/search-providers
   geoclue:
