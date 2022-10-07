@@ -27,7 +27,6 @@ apps:
     environment:
       LD_LIBRARY_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/org.gnome.Weather:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib:$SNAP/gnome-platform/usr/lib:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET
       GI_TYPELIB_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/org.gnome.Weather/girepository-1.0:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET/gjs/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET/girepository-1.0
-      LIBGWEATHER_LOCATIONS_PATH: $SNAP/usr/share/libgweather/Locations.xml
 
 parts:
   gnome-weather:
