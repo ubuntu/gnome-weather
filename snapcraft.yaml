@@ -47,6 +47,7 @@ parts:
       sed -i -e 's|@GJS@|/usr/bin/gjs|g' src/org.gnome.Weather.in
       sed -i -e 's|@GJS@|/usr/bin/gjs|g' src/org.gnome.Weather.BackgroundService.in
       sed -i.bak -e 's|Icon=@APP_ID@$|Icon=snap.gnome-weather.icon|g' data/org.gnome.Weather.desktop.in.in
+      sed -i.bak -e 's|Exec=gapplication launch @APP_ID@$|Exec=gnome-weather|g' data/org.gnome.Weather.desktop.in.in
     override-build: |
       craftctl default
       mkdir -p ${CRAFT_PART_INSTALL}/meta/gui/icons/hicolor/scalable/apps
