@@ -60,6 +60,7 @@ parts:
     source: https://gitlab.freedesktop.org/geoclue/geoclue.git
     source-type: git
     source-tag: '2.7.0'
+    source-depth: 1
     plugin: meson
     meson-parameters: [--prefix=/usr, -Dgtk-doc=false, -D3g-source=false, -Dcdma-source=false, -Dmodem-gps-source=false, -Dnmea-source=false, -Ddemo-agent=false]
     prime:
