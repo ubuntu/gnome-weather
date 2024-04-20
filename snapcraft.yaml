@@ -34,7 +34,7 @@ parts:
     after: [geoclue]
     source: https://gitlab.gnome.org/GNOME/gnome-weather.git
     source-type: git
-    source-tag: '44.0'
+    source-tag: '46.0'
     source-depth: 1
     plugin: meson
     meson-parameters: [--buildtype=release, --prefix=/snap/gnome-weather/current/usr]
@@ -59,7 +59,7 @@ parts:
 # ext:updatesnap
     source: https://gitlab.freedesktop.org/geoclue/geoclue.git
     source-type: git
-    source-tag: '2.7.0'
+    source-tag: '2.7.1'
     source-depth: 1
     plugin: meson
     meson-parameters: [--prefix=/usr, -Dgtk-doc=false, -D3g-source=false, -Dcdma-source=false, -Dmodem-gps-source=false, -Dnmea-source=false, -Ddemo-agent=false]
