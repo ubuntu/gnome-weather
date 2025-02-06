@@ -2,7 +2,7 @@ name: gnome-weather
 adopt-info: gnome-weather
 grade: stable
 confinement: strict
-base: core22
+base: core24
 
 layout:
   /usr/bin/gjs:
@@ -25,8 +25,8 @@ apps:
     desktop: usr/share/applications/org.gnome.Weather.desktop
     common-id: org.gnome.Weather
     environment:
-      LD_LIBRARY_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/org.gnome.Weather:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib:$SNAP/gnome-platform/usr/lib:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET
-      GI_TYPELIB_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/org.gnome.Weather/girepository-1.0:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET/gjs/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET/girepository-1.0
+      LD_LIBRARY_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/org.gnome.Weather:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/usr/lib:$SNAP/gnome-platform/usr/lib:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
+      GI_TYPELIB_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/org.gnome.Weather/girepository-1.0:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gjs/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/girepository-1.0
 
 parts:
   gnome-weather:
@@ -34,7 +34,7 @@ parts:
     after: [geoclue]
     source: https://gitlab.gnome.org/GNOME/gnome-weather.git
     source-type: git
-    source-tag: '46.0'
+    source-tag: '47.0'
     source-depth: 1
     plugin: meson
     meson-parameters: [--buildtype=release, --prefix=/snap/gnome-weather/current/usr]
@@ -49,6 +49,8 @@ parts:
       sed -i -e 's|@GJS@|/usr/bin/gjs|g' src/org.gnome.Weather.BackgroundService.in
       sed -i.bak -e 's|Icon=@APP_ID@$|Icon=snap.gnome-weather.icon|g' data/org.gnome.Weather.desktop.in.in
       sed -i.bak -e 's|Exec=gapplication launch @APP_ID@$|Exec=gnome-weather|g' data/org.gnome.Weather.desktop.in.in
+      # Invalid metadata
+      sed -i -e 's|<project_license.*||g' data/org.gnome.Weather.appdata.xml.in.in
     override-build: |
       craftctl default
       mkdir -p ${CRAFT_PART_INSTALL}/meta/gui/icons/hicolor/scalable/apps
