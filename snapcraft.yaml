@@ -15,6 +15,11 @@ slots:
     bus: session
     name: org.gnome.Weather
 
+plugs:
+  desktop:
+    desktop-file-ids:
+      - org.gnome.Weather
+
 apps:
   gnome-weather:
     command: usr/share/org.gnome.Weather/org.gnome.Weather
@@ -22,23 +27,24 @@ apps:
     plugs:
       - network
       - network-status
-    desktop: usr/share/applications/org.gnome.Weather.desktop
-    common-id: org.gnome.Weather
     environment:
       LD_LIBRARY_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/org.gnome.Weather:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/usr/lib:$SNAP/gnome-platform/usr/lib:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
       GI_TYPELIB_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/org.gnome.Weather/girepository-1.0:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gjs/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/girepository-1.0
 
 parts:
   gnome-weather:
-# ext:updatesnap
     after: [geoclue]
     source: https://gitlab.gnome.org/GNOME/gnome-weather.git
     source-type: git
     source-tag: '48.0'
     source-depth: 1
     plugin: meson
-    meson-parameters: [--buildtype=release, --prefix=/snap/gnome-weather/current/usr]
-    build-packages: [meson, ninja-build]
+    meson-parameters:
+      - --buildtype=release
+      - --prefix=/snap/gnome-weather/current/usr
+    build-packages:
+      - meson
+      - ninja-build
     parse-info: [usr/share/metainfo/org.gnome.Weather.appdata.xml]
     organize:
       snap/gnome-weather/current/usr: usr
@@ -55,16 +61,25 @@ parts:
       craftctl default
       mkdir -p ${CRAFT_PART_INSTALL}/meta/gui/icons/hicolor/scalable/apps
       cp ../src/data/icons/hicolor/scalable/apps/org.gnome.Weather.svg ${CRAFT_PART_INSTALL}/meta/gui/icons/hicolor/scalable/apps/snap.gnome-weather.icon.svg
+      cp data/org.gnome.Weather.desktop ${CRAFT_PART_INSTALL}/meta/gui/
     prime:
       - -usr/share/gnome-shell/search-providers
+      - -usr/share/applications/org.gnome.Weather.desktop
+
   geoclue:
-# ext:updatesnap
     source: https://gitlab.freedesktop.org/geoclue/geoclue.git
     source-type: git
     source-tag: '2.7.2'
     source-depth: 1
     plugin: meson
-    meson-parameters: [--prefix=/usr, -Dgtk-doc=false, -D3g-source=false, -Dcdma-source=false, -Dmodem-gps-source=false, -Dnmea-source=false, -Ddemo-agent=false]
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgtk-doc=false
+      - -D3g-source=false
+      - -Dcdma-source=false
+      - -Dmodem-gps-source=false
+      - -Dnmea-source=false
+      - -Ddemo-agent=false
     prime:
       - -etc/dbus-1
       - -etc/geoclue
@@ -73,7 +88,7 @@ parts:
       - -usr/include
       - -usr/lib/pkgconfig
       - -usr/lib/*/pkgconfig
-      - -usr/share/dbus-1/interfaces      
+      - -usr/share/dbus-1/interfaces
       - -usr/share/dbus-1/system-services
       - -usr/share/man
       - -usr/share/pkgconfig
